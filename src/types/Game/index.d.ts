@@ -82,6 +82,7 @@ interface GameState {
   turn: number,
   runningScore?: number,
   iteration?: number
+  automoveTimer: GameBoardItemTimer,
 }
 
 

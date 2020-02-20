@@ -107,6 +107,7 @@ const InitializeGame = (): GameState => {
   const turn = 0;
   const mode: GameMode = GameMode.PLAYING;
   const pillTimer:GameBoardItemTimer = { timer: 0 };
+  const automoveTimer:GameBoardItemTimer= {timer: 0};
   const PacmanStore: Pacman = new Pacman({id: 'DUMMY', x: 0, y: 0, type: GameBoardPieceType.EMPTY, moves: {}}, items, pillTimer);
 
   for (let y = 0; y < gameBoard.length; y += 1) {
@@ -157,7 +158,7 @@ const InitializeGame = (): GameState => {
 
   layout = ProcessLayout(layout);
 
-  return { mode, turn, GhostStartPoints, layout, items, GhostStore, PacmanStore, pillTimer };
+  return { mode, turn, GhostStartPoints, layout, items, GhostStore, PacmanStore, pillTimer, automoveTimer };
 };
 
 export { InitializeGame };

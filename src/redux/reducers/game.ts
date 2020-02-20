@@ -3,10 +3,10 @@ import { InitializeGame } from '../../lib/Game';
 import { GameBoardItemType, GameMode } from '../../lib/Map';
 
 /** Holds initial state */
-const initialState:GameState = {...InitializeGame(), runningScore: 0, iteration: 0};
+const initialState: GameState = { ...InitializeGame(), runningScore: 0, iteration: 0 };
 
-const gameReducer = (state:GameState = initialState, action: ReduxAction): GameState => {
-  const { items, GhostStore, PacmanStore, pillTimer} = state;
+const gameReducer = (state: GameState = initialState, action: ReduxAction): GameState => {
+  const { items, GhostStore, PacmanStore, pillTimer, automoveTimer } = state;
   let { mode, runningScore, iteration, turn } = state;
 
   let newMove; let i;
@@ -16,15 +16,15 @@ const gameReducer = (state:GameState = initialState, action: ReduxAction): GameS
     case ActionTypes.INIT:
       runningScore += PacmanStore.score;
       iteration = (iteration || 0) + 1;
-      return {...InitializeGame(), runningScore, iteration};
+      return { ...InitializeGame(), runningScore, iteration };
 
     case ActionTypes.RESET:
       runningScore = 0;
       iteration = 0;
-      return {...InitializeGame(), runningScore, iteration};
+      return { ...InitializeGame(), runningScore, iteration };
 
     case ActionTypes.SET_ITEMS:
-      return {...state, ...action.payload };
+      return { ...state, ...action.payload };
 
     case ActionTypes.TIC:
 
@@ -33,7 +33,14 @@ const gameReducer = (state:GameState = initialState, action: ReduxAction): GameS
         turn += 1;
 
         // Move Pacman
-        newMove = PacmanStore.getNextMove();
+        // Determine if next move is from keyboard or automated algorithm
+        if (automoveTimer.timer) {
+          newMove = PacmanStore.getBestMove();
+        }
+        else {
+          newMove = PacmanStore.getNextMove();
+        }
+
         if (newMove) {
           if (items[newMove.piece.y][newMove.piece.x].type === GameBoardItemType.GHOST && pillTimer.timer === 0) {
             mode = GameMode.FINISHED;
@@ -68,9 +75,14 @@ const gameReducer = (state:GameState = initialState, action: ReduxAction): GameS
         // Decrement Pill counter
         if (pillTimer.timer > 0) pillTimer.timer -= 1;
 
-      }
-      return {...state, items, mode, turn };
+        // Decrement automove counter
+        if(automoveTimer.timer) automoveTimer.timer -= 1;
 
+      }
+      return { ...state, items, mode, turn };
+
+    case ActionTypes.AUTOMOVE:
+      return { ...state, automoveTimer: { timer: action.payload.numTimes } };
     default:
       return state;
   }

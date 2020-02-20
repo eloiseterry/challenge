@@ -23,13 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Game: React.FC<GameProps> = ({ dispatch, layout, score, runningScore, iteration }): JSX.Element => {
-  
+
   const styles = useStyles({});
 
   useEffect(() => {
-    setInterval(() => {dispatch(tic());}, 250);
+    setInterval(() => { dispatch(tic()); }, 250);
   }, [dispatch]);
-  
+
   return (
     <Grid container alignContent="center" justify="center" className={styles.base} spacing={3}>
       <Grid item>
@@ -43,12 +43,12 @@ const Game: React.FC<GameProps> = ({ dispatch, layout, score, runningScore, iter
 };
 
 const mapStateToProps = (state: ReduxState): object => {
- 
-  const { layout, PacmanStore, runningScore, iteration } = state.game;
+
+  const { layout, PacmanStore, runningScore, iteration} = state.game;
 
   const score = typeof PacmanStore !== 'undefined' ? PacmanStore.score : 0;
 
-  return { layout, score, runningScore, iteration };
+  return { layout, score, runningScore, iteration  };
 };
 
 export default connect(mapStateToProps)(Game);
