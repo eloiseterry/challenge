@@ -34,7 +34,7 @@ class Pacman extends Item implements GameBoardItem {
 
   }
 
-  getAdjacentItem = (location: { x: number, y: number }, direction: GameDirection) => {
+  getAdjacentItem(location: { x: number, y: number }, direction: GameDirection): GameBoardItem | undefined {
     if (location.x > 0 && location.x < 15 && location.y < 15 && location.y > 0) {
       switch (direction) {
         case GameDirection.DOWN:
@@ -49,7 +49,7 @@ class Pacman extends Item implements GameBoardItem {
     }
   }
 
-  getItemValue = (item?: GameBoardItem) => {
+  getItemValue(item?: GameBoardItem): number {
     if (!item) {
       return 0
     }
@@ -66,7 +66,7 @@ class Pacman extends Item implements GameBoardItem {
     }
   }
 
-  getAdjacentItemValue = (item?: GameBoardItem) => {
+  getAdjacentItemValue(item?: GameBoardItem): number {
     if (!item) {
       return 0
     }
@@ -81,13 +81,15 @@ class Pacman extends Item implements GameBoardItem {
     }
   }
 
-  getMoveValue = (newLoc: { x: number, y: number }, direction: GameDirection) => {
+  getMoveValue(newLoc: { x: number, y: number }, direction: GameDirection): number {
     const currentItem = this.items[newLoc.y][newLoc.x]
 
     const adjacentItem = this.getAdjacentItem(newLoc, direction)
 
     return this.getItemValue(currentItem) + this.getAdjacentItemValue(adjacentItem)
   }
+
+
 
   /**
    * TODO
